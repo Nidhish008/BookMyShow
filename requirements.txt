@@ -1,0 +1,8 @@
+flask
+flask-sqlalchemy
+flask-cors
+flask-caching
+redis
+werkzeug
+gunicorn
+flask-session

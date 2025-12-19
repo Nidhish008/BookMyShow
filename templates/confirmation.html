@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmation</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">BookyMyShow</div>
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/events">Events</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/my-bookings">My Bookings</a></li>
+        </ul>
+    </nav>
+    <main>
+        <h2>Thank You, {{ name }}!</h2>
+        <p>Your booking for <strong>{{ event.title }}</strong> is confirmed.</p>
+        <p>Tickets: {{ quantity }}</p>
+        <p>A confirmation email has been sent to {{ email }}.</p>
+        <a href="/events" class="btn-secondary">Back to Events</a>
+    </main>
+</body>
+</html>

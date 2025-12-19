@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ event.title }} - Details</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">BookyMyShow</div>
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/events">Events</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/my-bookings">My Bookings</a></li>
+        </ul>
+    </nav>
+    <main>
+        <div class="event-detail">
+            <img src="{{ event.image }}" alt="{{ event.title }}">
+            <h2>{{ event.title }}</h2>
+            <p>{{ event.description }}</p>
+            <p><strong>Date:</strong> {{ event.date }}</p>
+            <p><strong>Location:</strong> {{ event.location }}</p>
+            <a href="/book/{{ event.id }}" class="btn-primary">Book Now</a>
+        </div>
+    </main>
+</body>
+</html>

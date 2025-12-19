@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events & Movies</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">BookyMyShow</div>
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/events">Events</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/my-bookings">My Bookings</a></li>
+        </ul>
+    </nav>
+    <main>
+        <h2>Events & Movies</h2>
+        <div class="card-grid">
+            {% for event in events %}
+            <div class="card">
+                <img src="{{ event.image }}" alt="{{ event.title }}">
+                <h3>{{ event.title }}</h3>
+                <p>{{ event.description }}</p>
+                <a href="/event/{{ event.id }}" class="btn-secondary">View Details</a>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+</body>
+</html>

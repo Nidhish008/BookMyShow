@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bookings</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">BookyMyShow</div>
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </nav>
+    <main>
+        <h2>My Bookings</h2>
+        <div class="bookings-list">
+        {% if bookings %}
+            {% for b in bookings %}
+            <div class="booking-card" style="border:1px solid #ccc; border-radius:8px; margin:1rem 0; padding:1.5rem; background:#f9f9f9;">
+                <h3 style="margin:0 0 0.5rem 0;">{{ b.movie }}</h3>
+                <p><strong>Seat:</strong> {{ b.seat }}</p>
+                <p><strong>Time:</strong> {{ b.time }}</p>
+                <p><strong>Status:</strong> <span style="color:{{ 'green' if b.status=='confirmed' else 'orange' }};font-weight:bold;">{{ b.status|capitalize }}</span></p>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No bookings found.</p>
+        {% endif %}
+        </div>
+    </main>
+</body>
+</html>
