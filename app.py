@@ -6,8 +6,6 @@ Session: Filesystem
 DB     : SQLite
 """
 
-# ==================== IMPORTS ====================
-
 from flask import Flask, request, jsonify, session, render_template, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
@@ -19,8 +17,6 @@ from datetime import datetime, timedelta
 import uuid
 import random
 import logging
-
-# ==================== APP INITIALIZATION ====================
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -39,13 +35,10 @@ app.config.update(
     CACHE_DEFAULT_TIMEOUT=300,
 )
 
-# ==================== EXTENSIONS ====================
 
 db = SQLAlchemy(app)
 cache = Cache(app)
 Session(app)
-
-# ==================== FRONTEND ROUTES ====================
 
 @app.route('/')
 def home():
@@ -129,7 +122,7 @@ def book_page(event_id):
         }
         return redirect(url_for('payment_page'))
     return render_template('book.html', event=event, seats=seats, error=error)
-# Payment gateway route
+
 @app.route('/payment', methods=['GET', 'POST'])
 def payment_page():
     details = session.get('booking_details')
@@ -159,7 +152,6 @@ def payment_page():
         }, name=details['name'], email=details['email'], quantity=details['quantity'])
     return render_template('payment.html')
 
-# ==================== CACHED EVENTS ROUTE ====================
 @app.route('/events-cached', methods=['GET', 'POST'])
 def events_cached_page():
     if request.method == 'POST':
@@ -200,8 +192,6 @@ def get_events_by_location(location):
             'location': theater.address
         })
     return events
-
-# ==================== MODELS ====================
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -253,8 +243,6 @@ class Ticket(db.Model):
     booking_id = db.Column(db.Integer)
     ticket_code = db.Column(db.String(20))
 
-# ==================== HELPERS ====================
-
 def login_required(fn):
     @wraps(fn)
     def wrapper(*a, **k):
@@ -263,7 +251,6 @@ def login_required(fn):
         return fn(*a, **k)
     return wrapper
 
-# ==================== AUTH ====================
 
 @app.route('/register', methods=['GET', 'POST'])
 def register_page():
@@ -345,23 +332,17 @@ def my_bookings():
         })
     return render_template('my_bookings.html', bookings=results)
 
-# ==================== SHOWS ====================
-
-# ==================== DEBUG CACHE ENDPOINT ====================
-@app.route('/debug/cache')
-def debug_cache():
-    # SimpleCache stores _cache as a dict
-    cache_data = getattr(cache, '_cache', {})
-    # Convert keys and values to strings for JSON serialization
-    result = {str(k): str(v[0]) for k, v in cache_data.items()}
-    return jsonify(result)
 
 @app.route("/api/shows/<city>")
 def shows_by_city(city):
     key = f"shows_{city}"
     cached = cache.get(key)
+
     if cached:
-        return jsonify(cached)
+        return jsonify({
+            "cache": "HIT",
+            "data": cached
+        })
 
     theaters = Theater.query.filter_by(city=city).all()
     result = []
@@ -378,9 +359,13 @@ def shows_by_city(city):
             })
 
     cache.set(key, result)
-    return jsonify(result)
 
-# ==================== BOOKING ====================
+    return jsonify({
+        "cache": "MISS",
+        "data": result
+    })
+
+
 
 @app.route("/api/book", methods=["POST"])
 @login_required
@@ -421,7 +406,6 @@ def pay(booking_id):
     cache.clear()
     return jsonify({"ticket": ticket.ticket_code})
 
-# ==================== DATA INIT ====================
 
 def init_data():
     if Theater.query.first():
@@ -460,8 +444,6 @@ def init_data():
                     ))
     db.session.commit()
     print("Sample movies and seats created")
-
-# ==================== STARTUP ====================
 
 with app.app_context():
     db.create_all()
